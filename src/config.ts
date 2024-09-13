@@ -5,7 +5,7 @@ type StyleMap = {
 };
 
 export const config = {
-    isDev: false,
+    isDev: true,
     mute: true,
     durationRound: 60000,
     appWidth: 1124,
