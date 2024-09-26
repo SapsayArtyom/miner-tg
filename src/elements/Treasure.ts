@@ -1,10 +1,16 @@
 import { Container, Point, Polygon, Sprite } from "pixi.js";
 import { getCirclePoints, getRandomInt } from "../helpers/points";
 
+enum Types {
+    gold,
+    rock,
+    diamond,
+}
+
 export default class Treasure extends Container {
-    public view: Sprite
-    public contourPoints: number[]
-    public points: Point[]
+    public view: Sprite;
+    public contourPoints: number[];
+    public points: Point[];
 
     constructor() {
         super();
@@ -13,7 +19,9 @@ export default class Treasure extends Container {
     }
 
     protected init() {
-        this.view = this.addChild(Sprite.from('gold'));
+        const type = getRandomInt(0, 2);
+        
+        this.view = this.addChild(Sprite.from(Types[type]));
         this.view.anchor.set(0.5);
         const quarter = this.view.width / 8;
         
@@ -31,7 +39,7 @@ export default class Treasure extends Container {
         this.points = getCirclePoints(this.view.width / 2, 0, 0, 8);
         this.view.hitArea = new Polygon(this.contourPoints);
 
-        const randW = getRandomInt(110, 160);
+        const randW = getRandomInt(100, 160);
         const sc = randW / this.view.width;
         
         this.view.scale.set(sc);

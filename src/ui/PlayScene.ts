@@ -36,7 +36,7 @@ export default class PlayScene extends Container {
         super({label: 'PlayScene'});
 
         this.game = MainGame.instance();
-        this.arrPosY = [0, 300, 600];
+        this.arrPosY = [0, 200, 400, 600, 800, 1000];
         this.startPos = null;
         this._emitter = new EventEmitter();
         this.arrCollaiders = [];
@@ -46,7 +46,7 @@ export default class PlayScene extends Container {
         tint.rect(0, 0, config.appWidth, config.appHeight);
         tint.fill({
             color: 0xff00ff,
-            alpha: 0.04
+            alpha: 0.004
         });
 
 
@@ -86,7 +86,7 @@ export default class PlayScene extends Container {
         this.treasureCont = this.addChild(new Container({label: 'treasureCont'}));
         this.treasureCont.y = 1100;
         this.arrTreasure = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 12; i++) {
             const index = getRandomItemIndex(this.arrPositions);
             const treasure = this.treasureCont.addChild(new Treasure());
             this.arrTreasure.push(treasure);
@@ -119,7 +119,7 @@ export default class PlayScene extends Container {
         });
         this.btn.position.set(
             (config.appWidth - this.btn.width) / 2,
-            1600
+            config.appHeight - this.btn.height - 80
         );
         this.addChild(this.btn);
         
@@ -132,7 +132,7 @@ export default class PlayScene extends Container {
         });
         this.btnRestart.position.set(
             (config.appWidth - this.btnRestart.width) / 2,
-            1600
+            config.appHeight - this.btn.height - 80
         );
         this.btnRestart.alpha = 0;
         this.btnRestart.interactive = false;
@@ -210,7 +210,7 @@ export default class PlayScene extends Container {
         let check = false;
         const clawPos = this.claw.view.getGlobalPosition();
         if (clawPos.x > config.appWidth || clawPos.x < 0) check = true;
-        else if (clawPos.y > 1600) check = true;
+        else if (clawPos.y > (config.appHeight - this.btn.height - 80)) check = true;
 
         return check;
     }
@@ -275,7 +275,7 @@ export default class PlayScene extends Container {
         graphic.clear();
         const globalPoints = getGlobal(points, sprite);
         graphic.poly(globalPoints);
-        graphic.fill({color: 0x0000FF, alpha: 0.05});
+        graphic.fill({color: 0x0000FF, alpha: 0.005});
         graphic.hitArea = new Polygon(globalPoints);
     }
     //  ----------------------------------------------------------------------- 

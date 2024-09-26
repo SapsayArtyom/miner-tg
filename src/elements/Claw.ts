@@ -36,7 +36,7 @@ export default class Claw extends Container {
         this.collaider.rect(0, 0, 1, 1);
         this.collaider.fill({
             color: 0xff0000,
-            alpha: 0.4
+            alpha: 0.004
         });
         this.collaider.position.set(0, 200);
         this.contCollaider.angle = 89;
