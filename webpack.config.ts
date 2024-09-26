@@ -27,7 +27,8 @@ export default (env: BuildEnv) => {
             clean: true,
         } : {
             filename: "[name].[contenthash].js",
-            path: path.resolve(__dirname, '../../builds/miner'),
+            // path: path.resolve(__dirname, '../../builds/miner'),
+            path: path.resolve(__dirname, 'dist'),
             publicPath: '/miner/',
             clean: true,
         },
