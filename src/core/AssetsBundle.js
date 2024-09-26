@@ -12,16 +12,17 @@ export const assetsBundle = [
     { alias:'btn_yes_off', src: './assets/btn_yes_idle.png'},
     { alias:'btn_yes_on', src: './assets/btn_yes_selected.png'},
     
-    { alias:'bullet_empty', src: './assets/bullet_empty.png'},
-    { alias:'bullet_full', src: './assets/bullet_full.png'},
-    { alias:'shot', src: './assets/shot.png'},
     { alias:'btn_sound_off', src: './assets/sound_off.png'},
     { alias:'btn_sound_on', src: './assets/sound_on.png'},
-    { alias:'target_green', src: './assets/target_green.png'},
-    { alias:'target_red', src: './assets/target_red.png'},
-    { alias:'target_yellow', src: './assets/target_yellow.png'},
-    { alias:'target_stem', src: './assets/target_stem.png'},
-    
+    { alias:'gold', src: './assets/gold.png'},
+    { alias:'diamond', src: './assets/diamond.png'},
+    { alias:'rock', src: './assets/rock.png'},
+    { alias:'claw_handle', src: './assets/claw_handle.png'},
+    { alias:'claw_open', src: './assets/claw_open.png'},
+    // { alias:'claw_closed', src: './assets/claw_closed.png'},
+    { alias:'rope', src: './assets/rope.png'},
+    { alias:'tnt', src: './assets/tnt.png'},
+    { alias:'character', src: './assets/character.png'},
 
     //  sound
     { alias:'headshot', src: './assets/sounds/SG_C_headshot.wav'},
@@ -36,5 +37,5 @@ export const fonts = {
         src: './assets/fonts/Boogaloo-Regular.ttf',
         data: { family: 'Boogaloo' },
     },
-}
+};
 

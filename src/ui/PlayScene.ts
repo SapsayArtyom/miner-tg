@@ -5,43 +5,38 @@ import { config } from "../config";
 import { EventEmitter } from "events";
 import gsap from "gsap";
 import { sound } from '@pixi/sound';
-import Miner from "../elements/Miner";
+import Character from "../elements/Character";
 import Treasure from "../elements/Treasure";
 import Claw from "../elements/Claw";
 import Button from "../elements/Button";
 import MainGame from "../core/MainGame";
 import { getGlobal, getRandomItemIndex } from "../helpers/points";
+import Miner from "../elements/Miner";
 
 export default class PlayScene extends Container {
-    // protected colors: string[]
-    // protected targetCont: Container
-    // protected sceneCont: Container
-    // protected sceneGraph: Graphics
-    // protected backGraph: Graphics
-    // protected text: Text
-    // protected reloadAmony: boolean
-    // protected arrValueText: Text[]
-    // public bullets: Bullets
-    public arrTreasure: Treasure[]
-    protected arrPosY: number[]
-    protected arrPositions: Point[]
-    protected miner: Miner
-    protected claw: Claw
-    protected clawCollaider: Graphics
-    protected arrCollaiders: Graphics[]
-    protected game: MainGame
-    protected startPos: Point
-    protected catchItem: Treasure
-    protected btn: Button
-    protected btnRestart: Button
+    public arrTreasure: Treasure[];
 
-    protected _emitter: EventEmitter
+    protected arrPosY: number[];
+    protected arrPositions: Point[];
+    protected miner: Miner;
+    // protected miner: Character
+    protected claw: Claw;
+    protected clawCollaider: Graphics;
+    protected arrCollaiders: Graphics[];
+    protected game: MainGame;
+    protected startPos: Point;
+    protected catchItem: Treasure;
+    protected btn: Button;
+    protected btnRestart: Button;
+    protected treasureCont: Container;
+
+    protected _emitter: EventEmitter;
 
     constructor() {
         super({label: 'PlayScene'});
 
         this.game = MainGame.instance();
-        this.arrPosY = [800, 1100, 1400];
+        this.arrPosY = [0, 300, 600];
         this.startPos = null;
         this._emitter = new EventEmitter();
         this.arrCollaiders = [];
@@ -52,7 +47,7 @@ export default class PlayScene extends Container {
         tint.fill({
             color: 0xff00ff,
             alpha: 0.04
-        })
+        });
 
 
         this.init();
@@ -60,12 +55,6 @@ export default class PlayScene extends Container {
         this.addTreasure();
         this.addCollaiders();
         this.addBtn();
-        // this.addListeners();
-        // this.addBullets();
-        // this.addText()
-        // this.animTargets();
-
-        // this.test();
     }
 
     get emitter(): EventEmitter {
@@ -73,28 +62,37 @@ export default class PlayScene extends Container {
     }
 
     protected init(): void {
+
         this.miner = this.addChild(new Miner());
         this.miner.position.set(
             config.appWidth / 2,
-            200
+            640
         );
+        this.claw = this.miner.getClaw();
+        // this.miner = this.addChild(new Character());
+        // this.miner.position.set(
+        //     config.appWidth / 2,
+        //     200
+        // );
 
-        this.claw = this.addChild(new Claw());
-        this.claw.position.set(
-            config.appWidth / 2,
-            200
-        );
+        // this.claw = this.addChild(new Claw());
+        // this.claw.position.set(
+        //     config.appWidth / 2,
+        //     200
+        // );
     }
 
     protected addTreasure(): void {
+        this.treasureCont = this.addChild(new Container({label: 'treasureCont'}));
+        this.treasureCont.y = 1100;
         this.arrTreasure = [];
         for (let i = 0; i < 5; i++) {
             const index = getRandomItemIndex(this.arrPositions);
-            const treasure = this.addChild(new Treasure());
+            const treasure = this.treasureCont.addChild(new Treasure());
             this.arrTreasure.push(treasure);
             
             const pos = this.arrPositions.splice(index, 1);
-            treasure.position.set(pos[0].x, pos[0].y)
+            treasure.position.set(pos[0].x, pos[0].y);
         }
     }
 
@@ -104,7 +102,7 @@ export default class PlayScene extends Container {
         for (let i = start; i <= end; i += step) {
             stepsArray.push(i);
             for (let j = 0; j < this.arrPosY.length; j++) {
-                this.arrPositions.push(new Point(i, this.arrPosY[j]))
+                this.arrPositions.push(new Point(i, this.arrPosY[j]));
             }
         }
     }
@@ -151,7 +149,7 @@ export default class PlayScene extends Container {
             const graph = this.addChild(new Graphics({label: `test-${i}`}));
             this.drawContour(graph, element.points, element.view);
             // graph.hitArea = new Polygon(element.points)
-            this.arrCollaiders.push(graph)
+            this.arrCollaiders.push(graph);
         }
     }
 
@@ -162,7 +160,7 @@ export default class PlayScene extends Container {
             
             if(this.catchItem) this.catchItem.position.set(
                 this.claw.view.getGlobalPosition().x , 
-                this.claw.view.getGlobalPosition().y + this.catchItem.height / 2
+                this.claw.view.getGlobalPosition().y + this.catchItem.height / 2 - this.treasureCont.y
             );
         }
         else {
@@ -176,7 +174,7 @@ export default class PlayScene extends Container {
         this.drawContour(this.clawCollaider, this.claw.points, this.claw.view);
         
         if(!this.catchItem) {
-            let id = this.hit();
+            const id = this.hit();
             
             if (id !== null) {
                 this.catchItem = this.arrTreasure.splice(id, 1)[0];
@@ -250,8 +248,12 @@ export default class PlayScene extends Container {
     
     // Функция для проверки пересечения двух спрайтов по их хит-областям
     protected checkCollision(sprite1: any, sprite2: any) {
-        const sprite1GlobalPoints = this.convertToGlobal(sprite1.view, sprite1.contourPoints.map((_: any, i: any) => new Point(sprite1.contourPoints[i], sprite1.contourPoints[i + 1])));
-        const sprite2GlobalPoints = this.convertToGlobal(sprite2.view, sprite2.contourPoints.map((_: any, i: any) => new Point(sprite2.contourPoints[i], sprite2.contourPoints[i + 1])));
+        const sprite1GlobalPoints = this.convertToGlobal(
+            sprite1.view, sprite1.contourPoints.map((_: any, i: any) => new Point(sprite1.contourPoints[i], sprite1.contourPoints[i + 1]))
+        );
+        const sprite2GlobalPoints = this.convertToGlobal(
+            sprite2.view, sprite2.contourPoints.map((_: any, i: any) => new Point(sprite2.contourPoints[i], sprite2.contourPoints[i + 1]))
+        );
     
         // Проверяем, есть ли пересечения точек хит-областей
         for (const point1 of sprite1GlobalPoints) {
@@ -268,8 +270,8 @@ export default class PlayScene extends Container {
         return false;
     }
 
-     // Функция для рисования контура на графическом объекте
-     protected drawContour(graphic: Graphics, points: Point[], sprite: Sprite) {
+    // Функция для рисования контура на графическом объекте
+    protected drawContour(graphic: Graphics, points: Point[], sprite: Sprite) {
         graphic.clear();
         const globalPoints = getGlobal(points, sprite);
         graphic.poly(globalPoints);

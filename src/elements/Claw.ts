@@ -12,21 +12,21 @@ export default class Claw extends Container {
     protected collaider: Graphics
     protected contCollaider: Container
     public contourPoints: number[]
-    
+
     public view: Sprite
     public isRevert = false
     public points: Point[]
 
     constructor() {
         super();
-        this.game = MainGame.instance()
+        this.game = MainGame.instance();
         this.speed = 9;
         this.init();
         this.startMove();
     }
 
     protected init(): void {
-        this.view = this.addChild(Sprite.from('target_red'));
+        this.view = this.addChild(Sprite.from('claw_open'));
         this.view.anchor.set(0.5);
         this.contourPoints = getSpriteContour(this.view);
         this.view.hitArea = new Polygon(this.contourPoints);
@@ -38,7 +38,7 @@ export default class Claw extends Container {
             color: 0xff0000,
             alpha: 0.4
         });
-        this.collaider.position.set(0, 200)
+        this.collaider.position.set(0, 200);
         this.contCollaider.angle = 89;
         this.points = getCirclePoints(this.view.width / 2, 0, 0, 8);
 
@@ -50,11 +50,12 @@ export default class Claw extends Container {
             angle: -89,
             yoyo: true,
             repeat: -1,
-            ease: 'none',
-            duration: 1,
+            ease: "power2.inOut",
+            duration: 1.5,
             onUpdate: () => {
                 const point = this.collaider.getGlobalPosition();
                 const pointStart = this.getGlobalPosition();
+                this.view.angle = this.contCollaider.angle;
                 this.view.position.set(
                     point.x - pointStart.x,
                     point.y - pointStart.y
