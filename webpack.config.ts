@@ -29,7 +29,7 @@ export default (env: BuildEnv) => {
             filename: "[name].[contenthash].js",
             // path: path.resolve(__dirname, '../../builds/miner'),
             path: path.resolve(__dirname, 'dist'),
-            publicPath: '/miner/',
+            // publicPath: '/miner/',
             clean: true,
         },
         plugins: [

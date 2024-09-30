@@ -11,8 +11,10 @@ export default class Claw extends Container {
     protected isPause = false
     protected collaider: Graphics
     protected contCollaider: Container
-    public contourPoints: number[]
+    protected textureClose: Texture
+    protected textureOpen: Texture
 
+    public contourPoints: number[]
     public view: Sprite
     public isRevert = false
     public points: Point[]
@@ -26,7 +28,11 @@ export default class Claw extends Container {
     }
 
     protected init(): void {
-        this.view = this.addChild(Sprite.from('claw_open'));
+        this.textureClose = Texture.from('claw_closed');
+        this.textureOpen = Texture.from('claw_open');
+
+        // this.view = this.addChild(Sprite.from('claw_open'));
+        this.view = this.addChild(Sprite.from('claw_closed'));
         this.view.anchor.set(0.5);
         this.contourPoints = getSpriteContour(this.view);
         this.view.hitArea = new Polygon(this.contourPoints);
@@ -66,6 +72,7 @@ export default class Claw extends Container {
 
     public start(): void {
         this.move.pause();
+        this.view.texture = this.textureOpen;
         this.direction = this.getPath();
     }
     
@@ -74,12 +81,14 @@ export default class Claw extends Container {
         this.direction.y = -this.direction.y;
         this.isRevert = true;
         if(isCatch) this.decriseSpeed();
+        else this.view.texture = this.textureClose;
     }
 
     public stop(): void {
         this.isRevert = false;
         this.incriseSpeed();
         this.move.resume();
+        this.view.texture = this.textureClose;
     }
 
     public moveTo(): void {

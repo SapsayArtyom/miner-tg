@@ -19,7 +19,7 @@ export const assetsBundle = [
     { alias:'rock', src: './assets/rock.png'},
     { alias:'claw_handle', src: './assets/claw_handle.png'},
     { alias:'claw_open', src: './assets/claw_open.png'},
-    // { alias:'claw_closed', src: './assets/claw_closed.png'},
+    { alias:'claw_closed', src: './assets/claw_closed.png'},
     { alias:'rope', src: './assets/rope.png'},
     { alias:'tnt', src: './assets/tnt.png'},
     { alias:'character', src: './assets/character.png'},
